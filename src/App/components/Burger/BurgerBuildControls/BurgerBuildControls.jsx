@@ -12,8 +12,15 @@ const controls = [
 
 const burgerBuildControls = props => (
   <div className={classes.BuildControls}>
+    <h3>Price: ${props.price.toFixed(2)}</h3>
     {controls.map(ctrl => (
-      <BurgerBuildControls key={ctrl.label} label={ctrl.label} />
+      <BurgerBuildControls
+        key={ctrl.label}
+        label={ctrl.label}
+        addIngredient={props.addIngredient.bind(this, ctrl.type)}
+        removeIngredient={props.removeIngredient.bind(this, ctrl.type)}
+        disableLessButton={props.disableLessButton[ctrl.type]}
+      />
     ))}
   </div>
 );
