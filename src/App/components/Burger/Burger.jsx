@@ -4,11 +4,17 @@ import classes from './Burger.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
 const burger = props => {
-  const burgerIngredients = Object.keys(props.ingredients).map(ingredientName =>
-    [...Array(props.ingredients[ingredientName])].map((_, index) => (
-      <BurgerIngredient type={ingredientName} key={ingredientName + index} />
-    ))
-  );
+  let burgerIngredients = Object.keys(props.ingredients)
+    .map(ingredientName =>
+      [...Array(props.ingredients[ingredientName])].map((_, index) => (
+        <BurgerIngredient type={ingredientName} key={ingredientName + index} />
+      ))
+    )
+    .reduce((arr, el) => arr.concat(el), []);
+
+  if (!burgerIngredients.length) {
+    burgerIngredients = <p>Please Start adding Ingredients</p>;
+  }
 
   return (
     <div className={classes.Burger}>
