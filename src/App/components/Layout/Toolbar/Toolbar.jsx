@@ -6,7 +6,9 @@ import Navigations from '../Navigations/Navigations';
 
 const toolbar = props => (
   <header className={classes.Toolbar}>
-    <div>MENU</div>
+    <button className={classes.Menu} onClick={props.openSideDrawer}>
+      <i class="fa fa-3x fa-bars" />
+    </button>
     <div className={classes.Logo}>
       <Logo />
     </div>
