@@ -9,13 +9,6 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
-const INGREDIENT_PRICES = {
-  salad: 0.5,
-  cheese: 0.4,
-  meat: 1.3,
-  bacon: 0.7
-};
-
 class BurgerBuilder extends Component {
   state = {
     ingredients: {
@@ -27,8 +20,21 @@ class BurgerBuilder extends Component {
     totalPrice: 4,
     purchasable: false,
     purchasing: false,
-    loading: false
+    loading: false,
+    priceLoaded: false,
+    errorLoadingPrice: false
   };
+
+  componentDidMount() {
+    if (!this.state.priceLoaded) {
+      axiosOrderInstance
+        .get('/ingredients.json')
+        .then(res =>
+          this.setState({ priceLoaded: true, ingredientPrices: res.data })
+        )
+        .catch(err => this.setState({ errorLoadingPrice: true }));
+    }
+  }
 
   addIngredientHandler = type => {
     const oldCount = this.state.ingredients[type];
@@ -37,7 +43,7 @@ class BurgerBuilder extends Component {
       ...this.state.ingredients
     };
     undatedIngredients[type] = updatedCount;
-    const priceAddition = INGREDIENT_PRICES[type];
+    const priceAddition = this.state.ingredientPrices[type];
     const oldPrice = this.state.totalPrice;
     const updatedPrice = oldPrice + priceAddition;
 
@@ -58,7 +64,7 @@ class BurgerBuilder extends Component {
       ...this.state.ingredients
     };
     undatedIngredients[type] = updatedCount;
-    const priceDeduction = INGREDIENT_PRICES[type];
+    const priceDeduction = this.state.ingredientPrices[type];
     const oldPrice = this.state.totalPrice;
     const updatedPrice = oldPrice - priceDeduction;
 
@@ -135,20 +141,32 @@ class BurgerBuilder extends Component {
       orderSummary = <Spinner />;
     }
 
+    let burgerControls = (
+      <BurgerBuildControls
+        addIngredient={this.addIngredientHandler}
+        removeIngredient={this.removeIngredientHandler}
+        disableLessButton={disableLessButtonInfo}
+        price={this.state.totalPrice}
+        purchasable={this.state.purchasable}
+        purchase={this.purchaseHandler}
+      />
+    );
+
+    if (!this.state.priceLoaded) {
+      burgerControls = this.state.errorLoadingPrice ? (
+        <p>Ingredients not loaded. Please try after sometime.</p>
+      ) : (
+        <Spinner />
+      );
+    }
+
     return (
       <Aux>
         <Modal show={this.state.purchasing} hide={this.cancelPurchaseHandler}>
           {orderSummary}
         </Modal>
         <Burger ingredients={this.state.ingredients} />
-        <BurgerBuildControls
-          addIngredient={this.addIngredientHandler}
-          removeIngredient={this.removeIngredientHandler}
-          disableLessButton={disableLessButtonInfo}
-          price={this.state.totalPrice}
-          purchasable={this.state.purchasable}
-          purchase={this.purchaseHandler}
-        />
+        {burgerControls}
       </Aux>
     );
   }
