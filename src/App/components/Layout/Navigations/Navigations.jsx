@@ -6,10 +6,10 @@ import Navigation from './Navigation/Navigation';
 const navigations = props => (
   <nav>
     <ul className={classes.NavigationItems}>
-      <Navigation link="/" active>
+      <Navigation exact link="/">
         Burger Builder
       </Navigation>
-      <Navigation link="/">Checkout</Navigation>
+      <Navigation link="/orders">Orders</Navigation>
     </ul>
   </nav>
 );
