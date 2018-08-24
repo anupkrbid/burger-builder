@@ -88,31 +88,45 @@ class BurgerBuilder extends Component {
   };
 
   continuePurchaseHandler = () => {
-    this.setState({ loading: true });
-    const orderDetails = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      deliveryMethod: 'fastest',
-      customer: {
-        name: 'Anup Kr Bid',
-        email: 'anup.blade@gmail.com',
-        address: {
-          street: 'test street',
-          zipCode: '123213',
-          country: 'India'
-        }
-      }
-    };
-    axiosOrderInstance
-      .post('/orders.json', orderDetails)
-      .then(res => {
-        this.setState({ purchasing: false, loading: false });
-        console.log('success', res);
-      })
-      .catch(err => {
-        console.log('failed', err);
-        this.setState({ purchasing: false, loading: false });
-      });
+    const queryParams = [];
+    for (let ingredient in this.state.ingredients) {
+      queryParams.push(
+        `${encodeURIComponent(ingredient)}=${encodeURIComponent(
+          this.state.ingredients[ingredient]
+        )}`
+      );
+    }
+    queryParams.push('price=' + this.state.totalPrice);
+    const queryString = queryParams.join('&');
+    this.props.history.push({
+      pathname: '/checkout',
+      search: `?${queryString}`
+    });
+    // this.setState({ loading: true });
+    // const orderDetails = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.totalPrice,
+    //   deliveryMethod: 'fastest',
+    //   customer: {
+    //     name: 'Anup Kr Bid',
+    //     email: 'anup.blade@gmail.com',
+    //     address: {
+    //       street: 'test street',
+    //       zipCode: '123213',
+    //       country: 'India'
+    //     }
+    //   }
+    // };
+    // axiosOrderInstance
+    //   .post('/orders.json', orderDetails)
+    //   .then(res => {
+    //     this.setState({ purchasing: false, loading: false });
+    //     console.log('success', res);
+    //   })
+    //   .catch(err => {
+    //     console.log('failed', err);
+    //     this.setState({ purchasing: false, loading: false });
+    //   });
   };
 
   cancelPurchaseHandler = () => {
