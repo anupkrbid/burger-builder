@@ -4,32 +4,44 @@ import Button from '../../../components/UI/Button/Button';
 import axiosOrderInstance from '../../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import classes from './ContactInfo.css';
+import Input from '../../../components/UI/Input/Input';
+import Select from '../../../components/UI/Select/Select';
 
 class ContactInfo extends Component {
   state = {
-    name: '',
-    email: '',
-    address: {
+    orderForm: {
+      name: '',
+      email: '',
       street: '',
       zipCode: '',
-      country: ''
-    }
+      country: '',
+      deliveryMethod: ''
+    },
+    loading: false
   };
 
-  orderHandler = event => {
+  inputChangedHandler = event => {
+    const updatedOrderForm = {
+      ...this.state.orderForm
+    };
+    updatedOrderForm[event.target.name] = event.target.value;
+    this.setState({ orderForm: updatedOrderForm });
+  };
+
+  submitOrderHandler = event => {
     event.preventDefault();
     this.setState({ loading: true });
     const orderDetails = {
       ingredients: this.props.ingredients,
       price: this.props.totalPrice,
-      deliveryMethod: 'fastest',
+      deliveryMethod: this.state.orderForm.deliveryMethod,
       customer: {
-        name: 'Anup Kr Bid',
-        email: 'anup.blade@gmail.com',
+        name: this.state.orderForm.name,
+        email: this.state.orderForm.email,
         address: {
-          street: 'test street',
-          zipCode: '123213',
-          country: 'India'
+          street: this.state.orderForm.street,
+          zipCode: this.state.orderForm.zipCode,
+          country: this.state.orderForm.country
         }
       }
     };
@@ -48,45 +60,58 @@ class ContactInfo extends Component {
 
   render() {
     let form = (
-      <form>
-        <input
-          className={classes.Input}
+      <form onSubmit={this.submitOrderHandler}>
+        <Input
           type="text"
           name="name"
-          id=""
+          label="Name"
+          value={this.state.orderForm.name}
           placeholder="name"
+          onChange={this.inputChangedHandler}
         />
-        <input
-          className={classes.Input}
-          type="text"
+        <Input
+          type="email"
           name="email"
-          id=""
+          label="Email"
+          value={this.state.orderForm.email}
           placeholder="email"
+          onChange={this.inputChangedHandler}
         />
-        <input
-          className={classes.Input}
+        <Input
           type="text"
           name="street"
-          id=""
+          label="Street"
+          value={this.state.orderForm.street}
           placeholder="street"
+          onChange={this.inputChangedHandler}
         />
-        <input
-          className={classes.Input}
+        <Input
           type="text"
-          name="zip"
-          id=""
-          placeholder="zip"
+          name="zipCode"
+          label="ZIP Code"
+          value={this.state.orderForm.zipCode}
+          placeholder="ZIP Code"
+          onChange={this.inputChangedHandler}
         />
-        <input
-          className={classes.Input}
+        <Input
           type="text"
-          name="countery"
-          id=""
-          placeholder="countery"
+          name="country"
+          label="Country"
+          value={this.state.orderForm.country}
+          placeholder="country"
+          onChange={this.inputChangedHandler}
         />
-        <Button type="success" click={this.orderHandler}>
-          ORDER
-        </Button>
+        <Select
+          name="deliveryMethod"
+          label="Delivery Method"
+          value={this.state.orderForm.deliveryMethod}
+          onChange={this.inputChangedHandler}
+          options={[
+            { key: 'fastest', value: 'fastest' },
+            { key: 'cheapest', value: 'cheapest' }
+          ]}
+        />
+        <Button type="success">ORDER</Button>
       </form>
     );
     if (this.state.loading) {
@@ -95,7 +120,7 @@ class ContactInfo extends Component {
 
     return (
       <div className={classes.ContactInfo}>
-        <h4>Enter Your Contact Data</h4>
+        <h4>Enter Your Contact Info</h4>
         {form}
       </div>
     );
