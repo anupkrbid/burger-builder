@@ -15,10 +15,54 @@ class ContactInfo extends Component {
       street: '',
       zipCode: '',
       country: '',
-      deliveryMethod: ''
+      deliveryMethod: 'fastest'
+    },
+    orderFormValidation: {
+      valid: false,
+      controls: {
+        name: false,
+        email: false,
+        street: false,
+        zipCode: false,
+        country: false
+      }
     },
     loading: false
   };
+
+  // shouldComponentUpdate(nextState) {
+  //   console.log(nextState);
+  //   return true;
+  //   // return (
+  //   //   nextProps.show !== this.props.show ||
+  //   //   nextProps.children !== this.props.children
+  //   // );
+  // }
+
+  // changeFormValidationStateHandler = (name, validity) => {
+  //   if (this.state.orderFormValidation.controls[name] === validity) {
+  //     return;
+  //   }
+
+  //   const updatedOrderFormValidation = {
+  //     ...this.state.orderFormValidation
+  //   };
+  //   const updatedOrderFormValidationControls = {
+  //     ...updatedOrderFormValidation.controls
+  //   };
+  //   updatedOrderFormValidationControls[name] = validity;
+
+  //   let isFormValid = true;
+  //   for (let key in updatedOrderFormValidationControls) {
+  //     if (!updatedOrderFormValidationControls[key]) {
+  //       isFormValid = false;
+  //       break;
+  //     }
+  //   }
+  //   updatedOrderFormValidation.valid = isFormValid;
+
+  //   this.setState({ orderFormValidation: updatedOrderFormValidation });
+  // };
 
   inputChangedHandler = event => {
     const updatedOrderForm = {
@@ -65,40 +109,52 @@ class ContactInfo extends Component {
           type="text"
           name="name"
           label="Name"
+          required="true"
           value={this.state.orderForm.name}
           placeholder="name"
+          // changeformvalidationstate={this.changeFormValidationStateHandler}
           onChange={this.inputChangedHandler}
         />
         <Input
           type="email"
           name="email"
           label="Email"
+          required="true"
           value={this.state.orderForm.email}
           placeholder="email"
+          // changeformvalidationstate={this.changeFormValidationStateHandler}
           onChange={this.inputChangedHandler}
         />
         <Input
           type="text"
           name="street"
           label="Street"
+          required="true"
           value={this.state.orderForm.street}
           placeholder="street"
+          // changeformvalidationstate={this.changeFormValidationStateHandler}
           onChange={this.inputChangedHandler}
         />
         <Input
           type="text"
           name="zipCode"
           label="ZIP Code"
+          required="true"
+          minLength="5"
+          maxLength="5"
           value={this.state.orderForm.zipCode}
           placeholder="ZIP Code"
+          // changeformvalidationstate={this.changeFormValidationStateHandler}
           onChange={this.inputChangedHandler}
         />
         <Input
           type="text"
           name="country"
           label="Country"
+          required="true"
           value={this.state.orderForm.country}
           placeholder="country"
+          // changeformvalidationstate={this.changeFormValidationStateHandler}
           onChange={this.inputChangedHandler}
         />
         <Select
