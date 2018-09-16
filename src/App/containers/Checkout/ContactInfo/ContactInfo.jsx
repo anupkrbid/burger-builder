@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import axiosOrderInstance from '../../../../axios-orders';
@@ -29,40 +30,6 @@ class ContactInfo extends Component {
     },
     loading: false
   };
-
-  // shouldComponentUpdate(nextState) {
-  //   console.log(nextState);
-  //   return true;
-  //   // return (
-  //   //   nextProps.show !== this.props.show ||
-  //   //   nextProps.children !== this.props.children
-  //   // );
-  // }
-
-  // changeFormValidationStateHandler = (name, validity) => {
-  //   if (this.state.orderFormValidation.controls[name] === validity) {
-  //     return;
-  //   }
-
-  //   const updatedOrderFormValidation = {
-  //     ...this.state.orderFormValidation
-  //   };
-  //   const updatedOrderFormValidationControls = {
-  //     ...updatedOrderFormValidation.controls
-  //   };
-  //   updatedOrderFormValidationControls[name] = validity;
-
-  //   let isFormValid = true;
-  //   for (let key in updatedOrderFormValidationControls) {
-  //     if (!updatedOrderFormValidationControls[key]) {
-  //       isFormValid = false;
-  //       break;
-  //     }
-  //   }
-  //   updatedOrderFormValidation.valid = isFormValid;
-
-  //   this.setState({ orderFormValidation: updatedOrderFormValidation });
-  // };
 
   inputChangedHandler = event => {
     const updatedOrderForm = {
@@ -183,4 +150,11 @@ class ContactInfo extends Component {
   }
 }
 
-export default ContactInfo;
+const mapStateToProps = state => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice
+  };
+};
+
+export default connect(mapStateToProps)(ContactInfo);
