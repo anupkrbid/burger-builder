@@ -7,9 +7,12 @@ import { createStore } from 'redux';
 import './index.css';
 import App from './App/App';
 import registerServiceWorker from './registerServiceWorker';
-import reducer from './App/store/reducer';
+import burgerBuilderReducer from './App/store/BurgerBuilder/reducer';
 
-const store = createStore(reducer);
+const store = createStore(
+  burgerBuilderReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 const app = (
   <Provider store={store}>
