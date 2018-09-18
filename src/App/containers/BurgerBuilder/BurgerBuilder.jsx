@@ -9,7 +9,7 @@ import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import * as burgerBuilderActions from '../../store/BurgerBuilder/actions';
+import * as burgerBuilderAction from '../../store/BurgerBuilder/action';
 
 class BurgerBuilder extends Component {
   state = {
@@ -95,24 +95,24 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.ingredients,
-    ingredientPrices: state.ingredientPrices,
-    totalPrice: state.totalPrice,
-    error: state.error,
-    loading: state.loading
+    ingredients: state.burgerBuilder.ingredients,
+    ingredientPrices: state.burgerBuilder.ingredientPrices,
+    totalPrice: state.burgerBuilder.totalPrice,
+    error: state.burgerBuilder.error,
+    loading: state.burgerBuilder.loading
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onIngredientAdded: ingName =>
-      dispatch(burgerBuilderActions.addIngredient({ ingredientName: ingName })),
+      dispatch(burgerBuilderAction.addIngredient({ ingredientName: ingName })),
     onIngredientRemoved: ingName =>
       dispatch(
-        burgerBuilderActions.removeIngredient({ ingredientName: ingName })
+        burgerBuilderAction.removeIngredient({ ingredientName: ingName })
       ),
     onFetchIngredientsAttempt: () =>
-      dispatch(burgerBuilderActions.fetchIngredientsAttempt())
+      dispatch(burgerBuilderAction.fetchIngredientsAttempt())
   };
 };
 

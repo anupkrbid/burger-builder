@@ -1,4 +1,4 @@
-import * as burgerBuilderActions from './actions';
+import * as burgerBuilderAction from './action';
 
 const initialState = {
   ingredients: {
@@ -15,7 +15,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case burgerBuilderActions.ADD_INGREDIENT: {
+    case burgerBuilderAction.ADD_INGREDIENT: {
       return {
         ...state,
         ingredients: {
@@ -28,7 +28,7 @@ const reducer = (state = initialState, action) => {
           state.ingredientPrices[action.payload.ingredientName]
       };
     }
-    case burgerBuilderActions.REMOVE_INGREDIENT: {
+    case burgerBuilderAction.REMOVE_INGREDIENT: {
       return {
         ...state,
         ingredients: {
@@ -41,7 +41,7 @@ const reducer = (state = initialState, action) => {
           state.ingredientPrices[action.payload.ingredientName]
       };
     }
-    case burgerBuilderActions.FETCH_INGREDIENTS_PRICE_FULFILLED: {
+    case burgerBuilderAction.FETCH_INGREDIENTS_PRICE_FULFILLED: {
       return {
         ...state,
         error: false,
@@ -49,7 +49,7 @@ const reducer = (state = initialState, action) => {
         ingredientPrices: action.payload
       };
     }
-    case burgerBuilderActions.FETCH_INGREDIENTS_PRICE_REJECTED: {
+    case burgerBuilderAction.FETCH_INGREDIENTS_PRICE_REJECTED: {
       return {
         ...state,
         error: true,

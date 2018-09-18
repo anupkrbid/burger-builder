@@ -7,6 +7,8 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import classes from './ContactInfo.css';
 import Input from '../../../components/UI/Input/Input';
 import Select from '../../../components/UI/Select/Select';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import * as orderAction from '../../../store/Order/action.js';
 
 class ContactInfo extends Component {
   state = {
@@ -27,8 +29,7 @@ class ContactInfo extends Component {
         zipCode: false,
         country: false
       }
-    },
-    loading: false
+    }
   };
 
   inputChangedHandler = event => {
@@ -56,17 +57,7 @@ class ContactInfo extends Component {
         }
       }
     };
-    axiosOrderInstance
-      .post('/orders.json', orderDetails)
-      .then(res => {
-        this.setState({ loading: false });
-        this.props.history.replace('/');
-        console.log('success', res);
-      })
-      .catch(err => {
-        console.log('failed', err);
-        this.setState({ loading: false });
-      });
+    this.props.onPlaceOrderAttempt(orderDetails);
   };
 
   render() {
@@ -137,7 +128,7 @@ class ContactInfo extends Component {
         <Button type="success">ORDER</Button>
       </form>
     );
-    if (this.state.loading) {
+    if (this.props.loading) {
       form = <Spinner />;
     }
 
@@ -152,9 +143,20 @@ class ContactInfo extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.ingredients,
-    totalPrice: state.totalPrice
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    loading: state.order.loading
   };
 };
 
-export default connect(mapStateToProps)(ContactInfo);
+const mapDispatchToProps = dispatch => {
+  return {
+    onPlaceOrderAttempt: orderDetails =>
+      dispatch(orderAction.placeOrderAttempt(orderDetails))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withErrorHandler(ContactInfo, axiosOrderInstance));
