@@ -10,6 +10,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as burgerBuilderAction from '../../store/BurgerBuilder/action';
+import * as orderAction from '../../store/Order/action';
 
 class BurgerBuilder extends Component {
   state = {
@@ -33,6 +34,7 @@ class BurgerBuilder extends Component {
   };
 
   continuePurchaseHandler = () => {
+    this.props.onInitPlaceOrder();
     this.props.history.push('/checkout');
   };
 
@@ -112,7 +114,8 @@ const mapDispatchToProps = dispatch => {
         burgerBuilderAction.removeIngredient({ ingredientName: ingName })
       ),
     onFetchIngredientsAttempt: () =>
-      dispatch(burgerBuilderAction.fetchIngredientsAttempt())
+      dispatch(burgerBuilderAction.fetchIngredientsAttempt()),
+    onInitPlaceOrder: () => dispatch(orderAction.placeOrderInit())
   };
 };
 

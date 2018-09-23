@@ -46,6 +46,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         error: false,
         loading: false,
+        totalPrice: 4,
+        ingredients: {
+          salad: 0,
+          bacon: 0,
+          cheese: 0,
+          meat: 0
+        },
         ingredientPrices: action.payload
       };
     }

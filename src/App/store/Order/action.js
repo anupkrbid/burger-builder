@@ -1,9 +1,16 @@
 import axiosOrderInstance from '../../../axios-orders';
 
+export const PLACE_ORDER_INIT = 'PLACE_ORDER_INIT';
 export const PLACE_ORDER_ATTEMPT = 'PLACE_ORDER_ATTEMPT';
 export const PLACE_ORDER_PENDING = 'PLACE_ORDER_PENDING';
 export const PLACE_ORDER_FULFILLED = 'PLACE_ORDER_FULFILLED';
 export const PLACE_ORDER_REJECTED = 'PLACE_ORDER_REJECTED';
+
+export const placeOrderInit = () => {
+  return {
+    type: PLACE_ORDER_INIT
+  };
+};
 
 export const placeOrderAttempt = payload => {
   return dispatch => {
