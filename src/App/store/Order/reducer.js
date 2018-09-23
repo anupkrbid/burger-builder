@@ -10,60 +10,89 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case orderAction.PLACE_ORDER_INIT: {
-      return {
-        ...state,
-        purchased: false
-      };
+      return placeOrderInit(state, action);
     }
     case orderAction.PLACE_ORDER_PENDING: {
-      return {
-        ...state,
-        loading: true
-      };
+      return placeOrderPending(state, action);
     }
     case orderAction.PLACE_ORDER_FULFILLED: {
-      const newOrder = {
-        ...action.payload.orderDetail,
-        id: action.payload.id
-      };
-      return {
-        ...state,
-        loading: false,
-        purchased: true,
-        orders: state.orders.concat(newOrder)
-      };
+      return placeOrderFulfilled(state, action);
     }
     case orderAction.PLACE_ORDER_REJECTED: {
-      return {
-        ...state,
-        purchased: true,
-        loading: false,
-        error: true
-      };
+      return placeOrderRejected(state, action);
     }
     case orderAction.FETCH_ORDERS_PENDING: {
-      return {
-        ...state,
-        loading: true
-      };
+      return fetchOrdersPending(state, action);
     }
     case orderAction.FETCH_ORDERS_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        orders: action.payload.orders
-      };
+      return fetchOrdersFulfilled(state, action);
     }
     case orderAction.FETCH_ORDERS_REJECTED: {
-      return {
-        ...state,
-        loading: false,
-        error: true
-      };
+      return fetchOrdersRejected(state, action);
     }
     default: {
       return state;
     }
   }
 };
+
 export default reducer;
+
+const placeOrderInit = (state, action) => {
+  return {
+    ...state,
+    purchased: false
+  };
+};
+
+const placeOrderPending = (state, action) => {
+  return {
+    ...state,
+    loading: true
+  };
+};
+
+const placeOrderFulfilled = (state, action) => {
+  const newOrder = {
+    ...action.payload.orderDetail,
+    id: action.payload.id
+  };
+  return {
+    ...state,
+    loading: false,
+    purchased: true,
+    orders: state.orders.concat(newOrder)
+  };
+};
+
+const placeOrderRejected = (state, action) => {
+  return {
+    ...state,
+    purchased: true,
+    loading: false,
+    error: true
+  };
+};
+
+const fetchOrdersPending = (state, action) => {
+  return {
+    ...state,
+    loading: true
+  };
+};
+
+const fetchOrdersFulfilled = (state, action) => {
+  return {
+    ...state,
+    loading: false,
+    orders: action.payload.orders
+  };
+};
+
+const fetchOrdersRejected = (state, action) => {
+  return {
+    ...state,
+    loading: false,
+    error: true
+  };
+};
