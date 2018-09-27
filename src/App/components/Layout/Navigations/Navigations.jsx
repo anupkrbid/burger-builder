@@ -10,6 +10,7 @@ const navigations = props => (
         Burger Builder
       </Navigation>
       <Navigation link="/orders">Orders</Navigation>
+      <Navigation link="/auth">Authenticate</Navigation>
     </ul>
   </nav>
 );
