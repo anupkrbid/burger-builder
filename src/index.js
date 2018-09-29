@@ -8,12 +8,14 @@ import thunk from 'redux-thunk';
 import './index.css';
 import App from './App/App';
 import registerServiceWorker from './registerServiceWorker';
+import authReducer from './App/store/Auth/reducer';
 import burgerBuilderReducer from './App/store/BurgerBuilder/reducer';
 import orderReducer from './App/store/Order/reducer';
 
 const rootReducers = combineReducers({
   burgerBuilder: burgerBuilderReducer,
-  order: orderReducer
+  order: orderReducer,
+  auth: authReducer
 });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(

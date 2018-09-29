@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import classes from './Auth.css';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import * as authActions from '../../store/Auth/action.js';
 
 class Auth extends Component {
@@ -39,7 +40,8 @@ class Auth extends Component {
         valid: false,
         touched: false
       }
-    }
+    },
+    isSigningIn: true
   };
 
   inputChangedHandler = event => {
@@ -54,8 +56,17 @@ class Auth extends Component {
     event.preventDefault();
     this.props.onAuthAttempt(
       this.state.controls.email.value,
-      this.state.controls.password.value
+      this.state.controls.password.value,
+      this.state.isSigningIn
     );
+  };
+
+  switchAuthProcessHandler = () => {
+    this.setState(previousState => {
+      return {
+        isSigningIn: !previousState.isSigningIn
+      };
+    });
   };
 
   render() {
@@ -78,25 +89,48 @@ class Auth extends Component {
       />
     ));
 
-    return (
-      <div className={classes.Auth}>
-        <form onSubmit={this.formSubmitHandler.bind(this)}>
-          {form}
-          <Button type="success">SUBMIT</Button>
-        </form>
-      </div>
-    );
+    const switchBtn = this.state.isSigningIn ? 'SIGN UP' : 'SIGN IN';
+    const submitBtn = this.state.isSigningIn ? 'SIGN IN' : 'SIGN UP';
+
+    let container = <Spinner />;
+
+    if (!this.props.loading) {
+      container = (
+        <div className={classes.Auth}>
+          {this.props.error}
+          <form onSubmit={this.formSubmitHandler.bind(this)}>
+            {form}
+            <Button type="success">{submitBtn}</Button>
+          </form>
+          <Button
+            type="danger"
+            click={this.switchAuthProcessHandler.bind(this)}
+          >
+            SWITCH TO {switchBtn}
+          </Button>
+        </div>
+      );
+    }
+
+    return container;
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.error
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
-    onAuthAttempt: (email, password) =>
-      dispatch(authActions.authAttempt(email, password))
+    onAuthAttempt: (email, password, isSigningIn) =>
+      dispatch(authActions.authAttempt({ email, password, isSigningIn }))
   };
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Auth);
