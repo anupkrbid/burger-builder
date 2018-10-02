@@ -18,10 +18,10 @@ export const placeOrderInit = () => {
 };
 
 export const placeOrderAttempt = payload => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(placeOrderPending());
     axiosOrderInstance
-      .post('/orders.json', payload)
+      .post(`/orders.json?auth=${getState().auth.token}`, payload)
       .then(res => {
         dispatch(
           placeOrderFulfilled({ id: res.data.name, orderDetail: payload })
@@ -52,10 +52,10 @@ export const placeOrderRejected = payload => {
 };
 
 export const fetchOrdersAttempt = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(fetchOrdersPending());
     axiosOrderInstance
-      .get('/orders.json')
+      .get(`/orders.json?auth=${getState().auth.token}`)
       .then(res => {
         const orders = [];
         for (let key in res.data) {

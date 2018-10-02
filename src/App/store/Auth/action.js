@@ -10,21 +10,17 @@ export const authAttempt = payload => {
   return dispatch => {
     dispatch(authPending());
 
-    const data = { ...payload };
-    delete data.isSigningIn;
-    let URL =
-      'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyAdUq9GtTwFTJ62de69dISoZRc-AwF-cuo';
+    const token = 'AIzaSyAdUq9GtTwFTJ62de69dISoZRc-AwF-cuo';
+
+    let URL = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${token}`;
 
     if (!payload.isSigningIn) {
-      data.returnSecureToken = true;
-      URL =
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyAdUq9GtTwFTJ62de69dISoZRc-AwF-cuo';
+      URL = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${token}`;
     }
 
     axios
-      .post(URL, { ...data })
+      .post(URL, { ...payload, returnSecureToken: true })
       .then(res => {
-        console.log(res);
         dispatch(authFulfilled(res.data));
       })
       .catch(err => dispatch(authRejected(err.response.data.error)));
