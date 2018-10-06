@@ -10,7 +10,9 @@ const axiosOrderInstance = axios.create({
 axiosOrderInstance.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    config.params = { auth: store.getState().auth.token };
+    if (!!store.getState().auth.token) {
+      config.params = { auth: store.getState().auth.token };
+    }
     return config;
   },
   function(error) {

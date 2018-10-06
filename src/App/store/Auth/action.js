@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setTimeout } from 'timers';
 
 export const AUTH_ATTEMPT = 'AUTH_ATTEMPT';
 export const AUTH_PENDING = 'AUTH_PENDING';
@@ -22,6 +23,7 @@ export const authAttempt = payload => {
       .post(URL, { ...payload, returnSecureToken: true })
       .then(res => {
         dispatch(authFulfilled(res.data));
+        dispatch(checkAuthTimeOut(res.data.expiresIn));
       })
       .catch(err => dispatch(authRejected(err.response.data.error)));
   };
@@ -31,6 +33,11 @@ const authPending = () => {
   return {
     type: AUTH_PENDING
   };
+};
+
+const checkAuthTimeOut = expirationTime => {
+  return dispatch =>
+    setTimeout(() => dispatch(authLogout()), expirationTime * 1000);
 };
 
 export const authFulfilled = payload => {
