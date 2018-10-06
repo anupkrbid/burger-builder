@@ -22,6 +22,12 @@ export const authAttempt = payload => {
     axios
       .post(URL, { ...payload, returnSecureToken: true })
       .then(res => {
+        const expirationData = new Date(
+          new Date().getTime() + res.data.expiresIn * 1000
+        );
+        localStorage.setItem('token', res.data.idToken);
+        localStorage.setItem('expirationData', expirationData);
+        localStorage.setItem('userId', res.data.localId);
         dispatch(authFulfilled(res.data));
         dispatch(checkAuthTimeOut(res.data.expiresIn));
       })
@@ -55,7 +61,33 @@ export const authRejected = payload => {
 };
 
 export const authLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('expirationData');
+  localStorage.removeItem('userId');
   return {
     type: AUTH_LOGOUT
+  };
+};
+
+export const authCheckValidity = () => {
+  return dispatch => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    const expirationData = new Date(localStorage.getItem('expirationData'));
+    if (!!token && expirationData > new Date()) {
+      dispatch(
+        authFulfilled({
+          idToken: token,
+          localid: userId
+        })
+      );
+      dispatch(
+        checkAuthTimeOut(
+          (expirationData.getTime() - new Date().getTime()) / 1000
+        )
+      );
+    } else {
+      dispatch(authLogout());
+    }
   };
 };

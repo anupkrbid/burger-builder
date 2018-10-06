@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import classes from './Auth.css';
@@ -112,6 +113,10 @@ class Auth extends Component {
       );
     }
 
+    if (this.props.isAuthenticated) {
+      container = <Redirect to="/" />;
+    }
+
     return container;
   }
 }
@@ -119,7 +124,8 @@ class Auth extends Component {
 const mapStateToProps = state => {
   return {
     loading: state.auth.loading,
-    error: state.auth.error
+    error: state.auth.error,
+    isAuthenticated: !!state.auth.token
   };
 };
 
