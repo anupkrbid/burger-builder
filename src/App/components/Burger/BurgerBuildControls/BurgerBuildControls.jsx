@@ -31,7 +31,7 @@ class BurgerBuildControls extends Component {
           disabled={false}
           onClick={this.props.signUpOrSignIn}
         >
-          SIGN UP OR SIGN IN TO PLACE ORDER
+          SIGN UP OR SIGN IN TO PLACE ORDERS
         </button>
       );
     }

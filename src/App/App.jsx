@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './App.css';
@@ -21,17 +21,37 @@ class App extends Component {
       <div>
         <Layout>
           <Switch>
-            <Route path="/checkout" component={Checkout} />
-            <Route path="/orders" component={Orders} />
-            <Route path="/auth" component={Auth} />
-            <Route path="/logout" component={Logout} />
+            {this.props.isAuthenticated && (
+              <Route path="/checkout" component={Checkout} />
+            )}
+
+            {this.props.isAuthenticated && (
+              <Route path="/orders" component={Orders} />
+            )}
+
+            {!this.props.isAuthenticated && (
+              <Route path="/auth" component={Auth} />
+            )}
+
+            {this.props.isAuthenticated && (
+              <Route path="/logout" component={Logout} />
+            )}
+
             <Route path="/" exact component={BurgerBuilder} />
+
+            <Redirect to="/" />
           </Switch>
         </Layout>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: !!state.auth.token
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -41,7 +61,7 @@ const mapDispatchToProps = dispatch => {
 
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )(App)
 );
