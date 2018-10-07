@@ -45,6 +45,7 @@ class ContactInfo extends Component {
     this.setState({ loading: true });
     const orderDetails = {
       ingredients: this.props.ingredients,
+      userId: this.props.userId,
       price: this.props.totalPrice,
       deliveryMethod: this.state.orderForm.deliveryMethod,
       customer: {
@@ -145,7 +146,8 @@ const mapStateToProps = state => {
   return {
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
-    loading: state.order.loading
+    loading: state.order.loading,
+    userId: state.auth.userId
   };
 };
 

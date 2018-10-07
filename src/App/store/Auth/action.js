@@ -78,7 +78,7 @@ export const authCheckValidity = () => {
       dispatch(
         authFulfilled({
           idToken: token,
-          localid: userId
+          localId: userId
         })
       );
       dispatch(

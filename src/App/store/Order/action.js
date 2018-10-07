@@ -52,10 +52,10 @@ export const placeOrderRejected = payload => {
 };
 
 export const fetchOrdersAttempt = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(fetchOrdersPending());
     axiosOrderInstance
-      .get('/orders.json')
+      .get(`/orders.json?orderBy="userId"&equalTo="${getState().auth.userId}"`)
       .then(res => {
         const orders = [];
         for (let key in res.data) {
