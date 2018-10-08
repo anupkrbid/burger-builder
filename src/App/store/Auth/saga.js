@@ -1,23 +1,22 @@
 import axios from 'axios';
 import { delay } from 'redux-saga';
-import { put, takeEvery } from 'redux-saga/effects';
+import { all, call, put, takeEvery } from 'redux-saga/effects';
 
 import * as authAction from './action';
 
 export function* watchAuthSagas() {
-  yield takeEvery(authAction.AUTH_LOGOUT_ATTEMPT, authLogoutSaga);
-  yield takeEvery(authAction.AUTH_CHECK_TIMEOUT, authCheckTimeOutSaga);
-  yield takeEvery(authAction.AUTH_ATTEMPT, authAttemptSaga);
-  yield takeEvery(
-    authAction.AUTH_CHECK_TOKEN_VALIDITY,
-    authCheckTokenValiditySaga
-  );
+  yield all([
+    takeEvery(authAction.AUTH_LOGOUT_ATTEMPT, authLogoutSaga),
+    takeEvery(authAction.AUTH_CHECK_TIMEOUT, authCheckTimeOutSaga),
+    takeEvery(authAction.AUTH_ATTEMPT, authAttemptSaga),
+    takeEvery(authAction.AUTH_CHECK_TOKEN_VALIDITY, authCheckTokenValiditySaga)
+  ]);
 }
 
 function* authLogoutSaga(action) {
-  yield localStorage.removeItem('token');
-  yield localStorage.removeItem('expirationData');
-  yield localStorage.removeItem('userId');
+  yield call([localStorage, 'removeItem'], 'token'); // equivalent to: yield localStorage.removeItem('token');
+  yield call([localStorage, 'removeItem'], 'expirationData'); // equivalent to: yield localStorage.removeItem('expirationData');
+  yield call([localStorage, 'removeItem'], 'userId'); // equivalent to: yield localStorage.removeItem('userId');
   yield put(authAction.authLogoutFulfilled());
 }
 

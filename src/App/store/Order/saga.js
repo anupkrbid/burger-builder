@@ -1,11 +1,13 @@
-import { put, select, takeEvery } from 'redux-saga/effects';
+import { all, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 
 import axiosOrderInstance from '../../../axios-orders';
 import * as orderAction from './action';
 
 export function* watchOrderSagas() {
-  yield takeEvery(orderAction.PLACE_ORDER_ATTEMPT, placeOrderAttemptSaga);
-  yield takeEvery(orderAction.FETCH_ORDERS_ATTEMPT, fetchOrdersAttemptSaga);
+  yield all([
+    takeLatest(orderAction.PLACE_ORDER_ATTEMPT, placeOrderAttemptSaga),
+    takeEvery(orderAction.FETCH_ORDERS_ATTEMPT, fetchOrdersAttemptSaga)
+  ]);
 }
 
 function* placeOrderAttemptSaga(action) {
