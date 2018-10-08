@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { setTimeout } from 'timers';
 
 export const AUTH_ATTEMPT = 'AUTH_ATTEMPT';
 export const AUTH_PENDING = 'AUTH_PENDING';
@@ -7,6 +6,7 @@ export const AUTH_FULFILLED = 'AUTH_FULFILLED';
 export const AUTH_REJECTED = 'AUTH_REJECTED';
 export const AUTH_LOGOUT_ATTEMPT = 'AUTH_LOGOUT_ATTEMPT';
 export const AUTH_LOGOUT_FULFILLED = 'AUTH_LOGOUT_FULFILLED';
+export const AUTH_CHECK_TIMEOUT = 'AUTH_CHECK_TIMEOUT';
 
 export const authAttempt = payload => {
   return dispatch => {
@@ -30,7 +30,7 @@ export const authAttempt = payload => {
         localStorage.setItem('expirationData', expirationData);
         localStorage.setItem('userId', res.data.localId);
         dispatch(authFulfilled(res.data));
-        dispatch(checkAuthTimeOut(res.data.expiresIn));
+        dispatch(authCheckTimeOut(res.data.expiresIn));
       })
       .catch(err => dispatch(authRejected(err.response.data.error)));
   };
@@ -42,9 +42,11 @@ const authPending = () => {
   };
 };
 
-const checkAuthTimeOut = expirationTime => {
-  return dispatch =>
-    setTimeout(() => dispatch(authLogoutAttempt()), expirationTime * 1000);
+const authCheckTimeOut = expirationTime => {
+  return {
+    type: AUTH_CHECK_TIMEOUT,
+    payload: { expirationTime: expirationTime }
+  };
 };
 
 export const authFulfilled = payload => {
@@ -86,7 +88,7 @@ export const authCheckValidity = () => {
         })
       );
       dispatch(
-        checkAuthTimeOut(
+        authCheckTimeOut(
           (expirationData.getTime() - new Date().getTime()) / 1000
         )
       );

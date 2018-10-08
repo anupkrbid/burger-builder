@@ -6,7 +6,7 @@ import authReducer from './Auth/reducer';
 import burgerBuilderReducer from './BurgerBuilder/reducer';
 import orderReducer from './Order/reducer';
 
-import { watchAuthLogoutAttempt } from './Auth/saga';
+import { watchAuthSagas } from './Auth/saga';
 
 const rootReducers = combineReducers({
   burgerBuilder: burgerBuilderReducer,
@@ -26,6 +26,6 @@ const store = createStore(
   composeEnhancers(applyMiddleware(thunk, sageMiddleware))
 );
 
-sageMiddleware.run(watchAuthLogoutAttempt);
+sageMiddleware.run(watchAuthSagas);
 
 export default store;
