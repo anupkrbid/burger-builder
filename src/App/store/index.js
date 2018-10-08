@@ -7,6 +7,7 @@ import burgerBuilderReducer from './BurgerBuilder/reducer';
 import orderReducer from './Order/reducer';
 
 import { watchAuthSagas } from './Auth/saga';
+import { watchBurgerBuilderSagas } from './BurgerBuilder/saga';
 
 const rootReducers = combineReducers({
   burgerBuilder: burgerBuilderReducer,
@@ -27,5 +28,6 @@ const store = createStore(
 );
 
 sageMiddleware.run(watchAuthSagas);
+sageMiddleware.run(watchBurgerBuilderSagas);
 
 export default store;
