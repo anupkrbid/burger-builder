@@ -18,8 +18,8 @@ const reducer = (state = initialState, action) => {
     case authAction.AUTH_REJECTED: {
       return authActionRejected(state, action);
     }
-    case authAction.AUTH_LOGOUT: {
-      return authActionLogout(state, action);
+    case authAction.AUTH_LOGOUT_FULFILLED: {
+      return authActionLogoutFulfilled(state, action);
     }
     default: {
       return state;
@@ -57,7 +57,7 @@ const authActionRejected = (state, action) => {
   };
 };
 
-const authActionLogout = (state, action) => {
+const authActionLogoutFulfilled = (state, action) => {
   return {
     ...state,
     loading: false,
