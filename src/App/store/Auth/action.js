@@ -9,43 +9,15 @@ export const AUTH_LOGOUT_FULFILLED = 'AUTH_LOGOUT_FULFILLED';
 export const AUTH_CHECK_TIMEOUT = 'AUTH_CHECK_TIMEOUT';
 
 export const authAttempt = payload => {
-  return dispatch => {
-    dispatch(authPending());
-
-    const TOKEN = 'AIzaSyAdUq9GtTwFTJ62de69dISoZRc-AwF-cuo';
-
-    let URL = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${TOKEN}`;
-
-    if (!payload.isSigningIn) {
-      URL = `https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=${TOKEN}`;
-    }
-
-    axios
-      .post(URL, { ...payload, returnSecureToken: true })
-      .then(res => {
-        const expirationData = new Date(
-          new Date().getTime() + res.data.expiresIn * 1000
-        );
-        localStorage.setItem('token', res.data.idToken);
-        localStorage.setItem('expirationData', expirationData);
-        localStorage.setItem('userId', res.data.localId);
-        dispatch(authFulfilled(res.data));
-        dispatch(authCheckTimeOut(res.data.expiresIn));
-      })
-      .catch(err => dispatch(authRejected(err.response.data.error)));
+  return {
+    type: AUTH_ATTEMPT,
+    payload: payload
   };
 };
 
-const authPending = () => {
+export const authPending = () => {
   return {
     type: AUTH_PENDING
-  };
-};
-
-const authCheckTimeOut = expirationTime => {
-  return {
-    type: AUTH_CHECK_TIMEOUT,
-    payload: { expirationTime: expirationTime }
   };
 };
 
@@ -95,5 +67,12 @@ export const authCheckValidity = () => {
     } else {
       dispatch(authLogoutAttempt());
     }
+  };
+};
+
+export const authCheckTimeOut = expirationTime => {
+  return {
+    type: AUTH_CHECK_TIMEOUT,
+    payload: { expirationTime: expirationTime }
   };
 };
