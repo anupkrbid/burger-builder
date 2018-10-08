@@ -8,6 +8,10 @@ export function* watchAuthSagas() {
   yield takeEvery(authAction.AUTH_LOGOUT_ATTEMPT, authLogoutSaga);
   yield takeEvery(authAction.AUTH_CHECK_TIMEOUT, authCheckTimeOutSaga);
   yield takeEvery(authAction.AUTH_ATTEMPT, authAttemptSaga);
+  yield takeEvery(
+    authAction.AUTH_CHECK_TOKEN_VALIDITY,
+    authCheckTokenValiditySaga
+  );
 }
 
 function* authLogoutSaga(action) {
@@ -51,5 +55,21 @@ function* authAttemptSaga(action) {
     yield put(authAction.authCheckTimeOut(res.data.expiresIn));
   } catch (err) {
     yield put(authAction.authRejected(err.response.data.error));
+  }
+}
+
+function* authCheckTokenValiditySaga(action) {
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
+  const expirationData = new Date(localStorage.getItem('expirationData'));
+  if (!!token && expirationData > new Date()) {
+    yield put(authAction.authFulfilled({ idToken: token, localId: userId }));
+    yield put(
+      authAction.authCheckTimeOut(
+        (expirationData.getTime() - new Date().getTime()) / 1000
+      )
+    );
+  } else {
+    yield put(authAction.authLogoutAttempt());
   }
 }

@@ -68,7 +68,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    tryAutoSignIn: () => dispatch(authActions.authCheckValidity())
+    tryAutoSignIn: () => dispatch(authActions.authCheckTokenValidity())
   };
 };
 
