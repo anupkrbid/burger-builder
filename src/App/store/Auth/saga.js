@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { delay } from 'redux-saga';
-import { takeEvery, put } from 'redux-saga/effects';
+import { put, takeEvery } from 'redux-saga/effects';
 
 import * as authAction from './action';
 

@@ -1,5 +1,4 @@
-import { takeEvery } from 'redux-saga';
-import { put } from 'redux-saga/effects';
+import { put, takeEvery } from 'redux-saga/effects';
 
 import * as burgerBuilderAction from './action';
 import axiosOrderInstance from '../../../axios-orders';

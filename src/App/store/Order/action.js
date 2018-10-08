@@ -1,5 +1,3 @@
-import axiosOrderInstance from '../../../axios-orders';
-
 export const PLACE_ORDER_INIT = 'PLACE_ORDER_INIT';
 export const PLACE_ORDER_ATTEMPT = 'PLACE_ORDER_ATTEMPT';
 export const PLACE_ORDER_PENDING = 'PLACE_ORDER_PENDING';
@@ -18,20 +16,13 @@ export const placeOrderInit = () => {
 };
 
 export const placeOrderAttempt = payload => {
-  return (dispatch, getState) => {
-    dispatch(placeOrderPending());
-    axiosOrderInstance
-      .post(`/orders.json?auth=${getState().auth.token}`, payload)
-      .then(res => {
-        dispatch(
-          placeOrderFulfilled({ id: res.data.name, orderDetail: payload })
-        );
-      })
-      .catch(err => dispatch(placeOrderRejected(err)));
+  return {
+    type: PLACE_ORDER_ATTEMPT,
+    payload: payload
   };
 };
 
-const placeOrderPending = () => {
+export const placeOrderPending = () => {
   return {
     type: PLACE_ORDER_PENDING
   };
@@ -52,25 +43,12 @@ export const placeOrderRejected = payload => {
 };
 
 export const fetchOrdersAttempt = () => {
-  return (dispatch, getState) => {
-    dispatch(fetchOrdersPending());
-    axiosOrderInstance
-      .get(`/orders.json?orderBy="userId"&equalTo="${getState().auth.userId}"`)
-      .then(res => {
-        const orders = [];
-        for (let key in res.data) {
-          orders.push({
-            ...res.data[key],
-            id: key
-          });
-        }
-        dispatch(fetchOrdersFulfilled({ orders: orders }));
-      })
-      .catch(err => dispatch(fetchOrdersRejected(err)));
+  return {
+    type: FETCH_ORDERS_ATTEMPT
   };
 };
 
-const fetchOrdersPending = () => {
+export const fetchOrdersPending = () => {
   return {
     type: FETCH_ORDERS_PENDING
   };
