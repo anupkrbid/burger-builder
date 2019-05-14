@@ -54,7 +54,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "firebase-login": "firebase login",
+    "firebase-deploy": "firebase deploy"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -97,5 +99,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "firebase-tools": "^6.9.2"
   }
 }
